@@ -106,16 +106,11 @@ class PrimerPair(object):
 
 #from sys import platform
 def get_software_path(base_path):
-	if sys.platform.startswith('linux'): # linux
-		primer3_path = base_path + "/primer3_core"
-		muscle_path = base_path + "/muscle"
-	elif sys.platform == "win32" or sys.platform == "cygwin": # Windows...
-		primer3_path = base_path + "/primer3_core.exe"
-		muscle_path = base_path + "/muscle.exe"
-	elif sys.platform == "darwin": # MacOSX
-		primer3_path = base_path + "/primer3_core_darwin64"
-		muscle_path = base_path + "/muscle3.8.31_i86darwin64"
-	return primer3_path, muscle_path
+    tmp1 = os.popen('which  muscle').readlines()
+    tmp2 = os.popen('which  primer3_core').readlines()
+    muscle_path=tmp1[0].rstrip()
+    primer3_path=tmp2[0].rstrip()
+    return primer3_path, muscle_path
 
 # simple Tm calculator
 def Tm(seq):
@@ -556,7 +551,7 @@ def caps(seqfile):
 	
 	# STEP 0: create alignment file and primer3output file
 	RawAlignFile = "alignment_raw_" + snpname + ".fa"
-	alignmentcmd = muscle_path + " -in " + seqfile2 + " -out " + RawAlignFile + " -quiet"
+	alignmentcmd = muscle_path + " -super5 " + seqfile2 + " -output " + RawAlignFile + " -quiet"
 	print(("Alignment command: ", alignmentcmd))
 	call(alignmentcmd, shell=True)
 	

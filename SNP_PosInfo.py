@@ -28,6 +28,7 @@
 # Modules needed
 from itertools import groupby
 import sys
+import os
 from subprocess import call
 
 ##############################################
@@ -104,8 +105,8 @@ def get_fasta(infile, seq_name_list):
 def main(argv):
 	#print("\n\n!!!Input file should have NO header!!!\nEach line is a SNP!\n\n")
 	snpinfo = argv[1] # input file
-	outfile = argv[2] # output file
-	reference = argv[3]
+	reference = argv[2]
+	outfile = argv[3] # output file
 	snpdict, seq_name_list = parse_exon_snp(snpinfo)
 	print("length of snpdict ", len(snpdict))
 	range_file = "temp_range.txt"
@@ -124,6 +125,7 @@ def main(argv):
 			snp.seq = seq[0:50] + "[" + snp.ref_allele + "/" + snp.alt_allele + "]" + seq[51:]
 		out.write(",".join([snp.name,snp.chr,snp.seq]) + "\n")
 	out.close()
+	os.system("rm flanking_seq.fa temp_range.txt")
 	return 0
 
 #############################################

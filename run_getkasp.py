@@ -40,8 +40,10 @@ def main(args):
 	kasp = int(args[4]) # whether to design KASP primer, 1 is yes, 0 is no
 	max_Tm = args[5] # max primer Tm, e.g. 63
 	max_size = args[6] # max primer size, e.g. 25
-	pick_anyway = args[7] # pick primer anyway even if it violates specific constrains
-	reference = args[8] # a blastable reference sequence file
+	reference = args[7] # a blastable reference sequence file
+	#pick_anyway = args[7] # pick primer anyway even if it violates specific constrains
+	#reference = args[8] # a blastable reference sequence file
+	pick_anyway = "0" # pick primer anyway even if it violates specific constrains
 	
 	script_path = os.path.dirname(os.path.realpath(__file__)) + "/bin/" # scripts folder
 
