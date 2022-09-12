@@ -1,5 +1,5 @@
 # KASP/Caps Primer pipeline
-a modified version for SNP_Primer_Pipeline2 
+a modified version of [SNP_Primer_Pipeline2](https://github.com/pinbo/SNP_Primer_Pipeline2)
 
 
 ## KASP引物设计
@@ -51,4 +51,4 @@ nohup ../SNP_Primer_Pipeline/run_getkasp.py  ../pos.info.csv    200    1    1   
 | 25| 引物最大长度|
 | ../data/sequences.fa | 参考序列位置（需事先建立好blast数据库）|
 
->KSAP引物设计程序核心为张军利博士的SNP_Primer_Pipeline2(https://github.com/pinbo/SNP_Primer_Pipeline2)，仅做易用性优化
+>KSAP引物设计程序核心为张军利博士的SNP_Primer_Pipeline2(https://github.com/pinbo/SNP_Primer_Pipeline2) ，仅做易用性优化
