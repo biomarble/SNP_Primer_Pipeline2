@@ -22,13 +22,14 @@ makeblastdb -in data/sequences.fa -dbtype nucl -parse_seqids
 位置文件预处理，获取SNP附近的序列
 
 ```bash
-nohup SNP_Primer_Pipeline/SNP_PosInfo.py  data/snp.pos.txt  data/sequences.fa  pos.info.csv  >PrepareRun.log
+nohup SNP_Primer_Pipeline/SNP_PosInfo.py  data/snp.pos.txt  data/sequences.fa  pos.info.csv  100 >PrepareRun.log
 ```
 |参数|含义|
 |-|-|
-|data/snp.pos.txt|输入位置文件；<br>Tab分隔的文本格式<br>文件共四列：染色体编号，位置，REF Alle， ALT Alle|
+|data/snp.pos.txt|输入位置文件；<br>Tab分隔的文本格式,无表头<br>文件共四列：染色体编号，位置，REF Alle， ALT Alle|
 |data/sequences.fa|已建立好blast数据库的基因组序列|
 |pos.info.csv|输出文件|
+|100|SNP侧翼序列范围|
 
 ### 引物设计
 
@@ -38,17 +39,18 @@ nohup SNP_Primer_Pipeline/SNP_PosInfo.py  data/snp.pos.txt  data/sequences.fa  p
 mkdir KASP_design_output #新建输出结果目录
 cd KASP_design_output  #进入输出结果目录
 
-nohup ../SNP_Primer_Pipeline/run_getkasp.py  ../pos.info.csv    200    1    1   63    25   ../data/sequences.fa   >PickPrimer.log
+nohup ../SNP_Primer_Pipeline/run_getkasp.py  ../pos.info.csv    200    0    1   63    25   ../data/sequences.fa   >PickPrimer.log
 ```
 
 |参数|含义|
 |-|-|
 | ../pos.info.csv|  SNP_PosInfo.py得到的位置文件，其中包括了flanking sequence,|
 | 200| 候选酶的最高价格 ( 美元/1000 U) |
-| 1| 是否设计CAPS引物 (1 for yes and 0 for NO)|
+| 0| 是否设计CAPS引物 (1 for yes and 0 for NO)|
 | 1| 是否设计KASP引物 (1 for yes and 0 for NO)|
 | 63| 最大退火温度 Tm |
 | 25| 引物最大长度|
 | ../data/sequences.fa | 参考序列位置（需事先建立好blast数据库）|
 
 >KSAP引物设计程序核心为张军利博士的SNP_Primer_Pipeline2(https://github.com/pinbo/SNP_Primer_Pipeline2) ，仅做易用性优化
+

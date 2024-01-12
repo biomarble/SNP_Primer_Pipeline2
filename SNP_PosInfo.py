@@ -35,10 +35,10 @@ from subprocess import call
 # SNP class to store all the related information for a SNP
 class SNP:
 	''' Object representing a SNP record. '''
-	def __init__(self, contig, ref_pos, ref_allele, alt_allele):
+	def __init__(self, contig, ref_pos, ref_allele, alt_allele, ulen):
 		self.chr = contig
 		self.name = contig + "-" + str(ref_pos)
-		xstream = 50 # get 50 bps on each side
+		xstream = ulen # get 50 bps on each side
 		self.contig = contig
 		self.ref_pos = ref_pos
 		self.ref_allele = ref_allele
@@ -52,7 +52,7 @@ class SNP:
 #IWGSC_CSS_7AL_scaff_4491815     4083       T       A
 #IWGSC_CSS_7AL_scaff_4552312     3240       G       T
 #chr7A	1111400000	G	C
-def parse_exon_snp(snpinfo):
+def parse_exon_snp(snpinfo,ulen):
 	snpdict = {} # dictionary of snp information
 	seq_name_list = [] # for changing the sequence names from the blastdbcmd output
 	with open(snpinfo) as infile:
@@ -62,7 +62,7 @@ def parse_exon_snp(snpinfo):
 			if not line:
 				continue
 			contig, ref_pos, ref_allele, alt_allele = line.rstrip().split() # split with white space, tab or space are all okay
-			snpdict[contig + "-" + ref_pos] = SNP(contig, int(ref_pos), ref_allele, alt_allele)
+			snpdict[contig + "-" + ref_pos] = SNP(contig, int(ref_pos), ref_allele, alt_allele, ulen)
 			seq_name_list.append(contig + "-" + ref_pos)
 	return snpdict, seq_name_list
 
@@ -107,7 +107,9 @@ def main(argv):
 	snpinfo = argv[1] # input file
 	reference = argv[2]
 	outfile = argv[3] # output file
-	snpdict, seq_name_list = parse_exon_snp(snpinfo)
+	flanklen = int(argv[4])
+	ulen=int(flanklen/2)
+	snpdict, seq_name_list = parse_exon_snp(snpinfo,ulen)
 	print("length of snpdict ", len(snpdict))
 	range_file = "temp_range.txt"
 	prepare_seq_range(snpdict, seq_name_list, range_file)
@@ -120,9 +122,9 @@ def main(argv):
 		snp = snpdict[i]
 		seq = seq_fasta[i]
 		if (snp.leftpos == 1):
-			snp.seq = seq[0:-52] + "[" + snp.ref_allele + "/" + snp.alt_allele + "]" + seq[-50:]
+			snp.seq = seq[0:-ulen-1] + "[" + snp.ref_allele + "/" + snp.alt_allele + "]" + seq[-ulen:]
 		else:
-			snp.seq = seq[0:50] + "[" + snp.ref_allele + "/" + snp.alt_allele + "]" + seq[51:]
+			snp.seq = seq[0:ulen] + "[" + snp.ref_allele + "/" + snp.alt_allele + "]" + seq[ulen+1:]
 		out.write(",".join([snp.name,snp.chr,snp.seq]) + "\n")
 	out.close()
 	os.system("rm flanking_seq.fa temp_range.txt")

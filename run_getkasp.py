@@ -107,6 +107,7 @@ def main(args):
 	if kasp:
 		call(cmd11, shell=True)
 	#call(cmd12, shell=True)
+                    
 	if caps or kasp:
 		toglob = "alignment_raw_*"
 		alignment_files = glob("alignment_raw_*")
@@ -129,6 +130,8 @@ def main(args):
 				outfile.write(infile.read())
 				outfile.write("\n\n")
 	outfile.close()
+	cmd3 = "mkdir tmp && mv *temp* tmp && mv *alignment_raw* tmp "
+	call(cmd3, shell=True)
 	print("\n\n\n KASP primers have been designed successfully!\n Check files beginning with 'select_primer' and CAPS_output.txt")
 	return 0
 
